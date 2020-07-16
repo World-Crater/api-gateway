@@ -12,7 +12,7 @@ app.use('/auth-service', proxy('http://auth-service:3005'))
 
 app.use('/ad-service', proxy('http://ad-service:3006'))
 
-app.use('/messfar-admin', proxy('http://messfar-admin:5000'))
+app.use('/messfar-admin', proxy('http://messfar-admin:80'))
 
 app.use(
   '/file-service',
