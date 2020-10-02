@@ -2,7 +2,14 @@ const express = require('express')
 const proxy = require('express-http-proxy')
 const cors = require('cors')
 const authMeddleware = require('./middleware/auth')
+const fs = require('fs');
+const https = require('https')
 const app = express()
+
+const options = {
+  key: fs.readFileSync('./privkey.pem'),
+  cert: fs.readFileSync('./cert.pem'),
+};
 
 app.use(cors())
 
@@ -26,6 +33,6 @@ app.use(
   proxy('http://face-service:3000')
 )
 
-app.listen(3003, function () {
+https.createServer(options, app).listen(3003, function(){
   console.log('Listening on port 3003')
-})
+});
