@@ -36,7 +36,7 @@ app.use(
 app.use(
   '/face-service',
   authMeddleware.verifyToken([
-    '^\/face-service\/.+$'
+    '^\/face-service\/faces\/.+$'
   ]),
   proxy('http://face-service:3000')
 )

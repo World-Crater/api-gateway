@@ -7,7 +7,7 @@ function verifyToken (exludePaths = []) {
 
   return async (req, res, next) => {
     try {
-      if (isInExludePaths(req.route.path)) {
+      if (isInExludePaths(req.originalUrl)) {
         next()
         return
       }
