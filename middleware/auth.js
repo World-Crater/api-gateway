@@ -1,17 +1,27 @@
 const token = require('../helper/token')
 
-async function verifyToken (req, res, next) {
-  try {
-    const decode = await token.verify(req.headers.authorization)
-    res.locals = {
-      ...req.local,
-      decode
+function verifyToken (exludePaths = []) {
+  const isInExludePaths = path => exludePaths
+    .map(item => new RegExp(item, 'g'))
+    .some(item => item.test(path))
+
+  return async (req, res, next) => {
+    try {
+      if (isInExludePaths(req.route.path)) {
+        next()
+        return
+      }
+      const decode = await token.verify(req.headers.authorization)
+      res.locals = {
+        ...req.local,
+        decode
+      }
+      next()
+    } catch (err) {
+      res.status(403).json({
+        error: 'Invalid token'
+      })
     }
-    next()
-  } catch (err) {
-    res.status(403).json({
-      error: 'Invalid token'
-    })
   }
 }
 

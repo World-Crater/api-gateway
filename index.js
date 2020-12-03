@@ -23,13 +23,15 @@ app.use('/messfar-admin', proxy('http://messfar-admin:80'))
 
 app.use(
   '/file-service',
-  authMeddleware.verifyToken,
+  authMeddleware.verifyToken(),
   proxy('http://file-service:3001')
 )
 
 app.use(
   '/face-service',
-  authMeddleware.verifyToken,
+  authMeddleware.verifyToken([
+    '^\/face-service\/.+$'
+  ]),
   proxy('http://face-service:3000')
 )
 
