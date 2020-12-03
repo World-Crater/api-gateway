@@ -3,6 +3,7 @@ const proxy = require('express-http-proxy')
 const cors = require('cors')
 const authMeddleware = require('./middleware/auth')
 const fs = require('fs');
+const rateLimit = require("express-rate-limit");
 const https = require('https')
 const app = express()
 
@@ -12,6 +13,11 @@ const options = {
 };
 
 app.use(cors())
+
+app.use(rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: 1000
+}));
 
 app.use('/messfar-line-service', proxy('http://messfar-line-service:3002'))
 
