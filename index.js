@@ -27,6 +27,8 @@ app.use('/ad-service', proxy('http://ad-service:3006'))
 
 app.use('/messfar-admin', proxy('http://messfar-admin:80'))
 
+app.use('/messfar-frontend', proxy('http://messfar-frontend:80'))
+
 app.use(
   '/file-service',
   authMeddleware.verifyToken(),
