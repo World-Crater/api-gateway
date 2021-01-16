@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.use("/messfar-line-service", proxy("http://messfar-line-service:3002"));
 
+router.use("/liff-service", proxy("http://liff-service:8080"));
+
 router.use("/auth-service", proxy("http://auth-service:3005"));
 
 router.use("/ad-service", proxy("http://ad-service:3006"));
