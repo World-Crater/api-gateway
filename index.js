@@ -1,8 +1,11 @@
+require("dotenv").config();
 const express = require("express");
+const proxy = require("express-http-proxy");
 const cors = require("cors");
 const fs = require("fs");
 const vhost = require("vhost");
 const tls = require("tls");
+const { verifyToken, checkScopes, scopes } = require("./middleware/auth");
 const rateLimit = require("express-rate-limit");
 const https = require("https");
 const app = express();
@@ -39,6 +42,8 @@ app.use(
     max: 1000,
   })
 );
+
+app.use(verifyToken);
 
 app.use(vhost("messfar.com", require("./router/messfar.com")));
 app.use(vhost("api.worldcrater.com", require("./router/api.worldcrater.com")));

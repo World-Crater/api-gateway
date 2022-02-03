@@ -1,28 +1,59 @@
 const express = require("express");
 const proxy = require("express-http-proxy");
-const authMeddleware = require("../middleware/auth");
+const { checkScopes, scopes } = require("../middleware/auth");
 const router = express.Router();
 
-router.use("/messfar-line-service", proxy("http://messfar-line-service:3002"));
+router.use("/messfar-line-service", proxy(process.env.MESSFAR_LINE_SERVICE));
 
-router.use("/liff-service", proxy("http://liff-service:8080"));
-
-router.use("/auth-service", proxy("http://auth-service:3005"));
-
-router.use("/ad-service", proxy("http://ad-service:3006"));
-
-router.use("/messfar-admin", proxy("http://messfar-admin:80"));
-
-router.use(
-  "/file-service",
-  authMeddleware.verifyToken(),
-  proxy("http://file-service:3001")
+router.post(
+  "/liff-service/accounts/:accountID/favorites",
+  checkScopes([scopes.messfarUser]),
+  (req, res, next) => {
+    req.url = `/liff-service/accounts/${res.locals.accountID}/favorites`;
+    next();
+  },
+  proxy(process.env.LIFF_SERVICE)
+);
+router.delete(
+  "/liff-service/accounts/:accountID/favorites/:favorite",
+  checkScopes([scopes.messfarUser]),
+  (req, res, next) => {
+    req.url = `/liff-service/accounts/${res.locals.accountID}/favorites/${req.params.favorite}`;
+    next();
+  },
+  proxy(process.env.LIFF_SERVICE)
+);
+router.get(
+  "/liff-service/accounts/:accountID/favorites",
+  checkScopes([scopes.messfarUser]),
+  (req, res, next) => {
+    req.url = `/liff-service/accounts/${res.locals.accountID}/favorites`;
+    next();
+  },
+  proxy(process.env.LIFF_SERVICE)
 );
 
-router.use(
-  "/face-service",
-  authMeddleware.verifyToken(["^/face-service/faces/.+$"]),
-  proxy("http://face-service:3000")
+router.use("/auth-service", proxy(process.env.AUTH_SERVICE));
+
+router.use("/ad-service", proxy(process.env.AD_SERVICE));
+
+router.use("/messfar-admin", proxy(process.env.MESSFAR_ADMIN));
+
+router.post(
+  "/file-service/image/imgur",
+  checkScopes([scopes.messfarAdmin]),
+  proxy(process.env.FILE_SERVICE)
+);
+router.post(
+  "/file-service/image/s3",
+  checkScopes([scopes.messfarAdmin]),
+  proxy(process.env.FILE_SERVICE)
+);
+
+router.get(
+  "/face-service/faces/face/:faceID",
+  checkScopes([]),
+  proxy(process.env.FACE_SERVICE)
 );
 
 module.exports = router;

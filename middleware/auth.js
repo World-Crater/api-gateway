@@ -1,30 +1,48 @@
-const token = require('../helper/token')
+const { verifyAuthToken } = require("../services/auth-service");
 
-function verifyToken (exludePaths = []) {
-  const isInExludePaths = path => exludePaths
-    .map(item => new RegExp(item, 'g'))
-    .some(item => item.test(path))
+const scopes = {
+  messfarAdmin: "messfarAdmin",
+  messfarUser: "messfarUser",
+};
 
-  return async (req, res, next) => {
-    try {
-      if (isInExludePaths(req.originalUrl)) {
-        next()
-        return
-      }
-      const decode = await token.verify(req.headers.authorization)
-      res.locals = {
-        ...req.local,
-        decode
-      }
-      next()
-    } catch (err) {
+function checkScopes(requireScopes) {
+  return (req, res, next) => {
+    if (
+      !!requireScopes &&
+      (requireScopes.length === 0 ||
+        requireScopes.some((item) => res.locals.scopes.includes(item)))
+    ) {
+      next();
+      return;
+    } else {
       res.status(403).json({
-        error: 'Invalid token'
-      })
+        error: "forbidden",
+      });
     }
+  };
+}
+
+async function verifyToken(req, res, next) {
+  try {
+    if (!req.headers.authorization) {
+      next();
+      return;
+    }
+    const decode = await verifyAuthToken(req.headers.authorization);
+    res.locals = {
+      ...req.local,
+      ...decode,
+    };
+    next();
+  } catch (err) {
+    res.status(403).json({
+      error: "forbidden",
+    });
   }
 }
 
 module.exports = {
-  verifyToken
-}
+  verifyToken,
+  scopes,
+  checkScopes,
+};
