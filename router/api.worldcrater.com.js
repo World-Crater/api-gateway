@@ -3,7 +3,14 @@ const proxy = require("express-http-proxy");
 const { checkScopes, scopes } = require("../middleware/auth");
 const router = express.Router();
 
-router.use("/messfar-line-service", proxy(process.env.MESSFAR_LINE_SERVICE));
+router.use(
+  "/messfar-line-service",
+  (req, res, next) => {
+    console.log("messfar line service get request");
+    next();
+  },
+  proxy(process.env.MESSFAR_LINE_SERVICE)
+);
 
 // yorktodo: workaround: 替換路徑的accountID成token的accountID
 router.post("/liff-service/accounts/:accountID/favorites", (req, res, next) => {
