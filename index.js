@@ -44,10 +44,35 @@ app.use(
 );
 
 app.use(verifyToken);
+//yorktodo
+// app.use(vhost("messfar.com", require("./router/messfar.com")));
+// app.use(vhost("api.worldcrater.com", require("./router/api.worldcrater.com")));
 
-app.use(vhost("messfar.com", require("./router/messfar.com")));
-app.use(vhost("api.worldcrater.com", require("./router/api.worldcrater.com")));
+// app.use(require("./router/messfar.com"));
+app.use(require("./router/api.worldcrater.com"));
 
-https.createServer(options, app).listen(3003, function () {
-  console.log("Listening on port 3003");
+//yorktodo
+// app.get("/liff-service/accounts/:accountID/favorites", (req, res, next) => {
+//   req.url = `/liff-service/accounts/${res.locals.accountID}/favorites`;
+//   console.log("yorkjijais", req.url);
+//   next();
+// });
+// console.log("yorkjijasdfjamsd,f", process.env.LIFF_SERVICE);
+//yorktodo
+// app.use(
+//   "/liff-service",
+//   checkScopes({
+//     "POST:/accounts/*/favorites": [],
+//     "DELETE:/accounts/*/favorites/*": [],
+//     "GET:/accounts/*/favorites": [],
+//   }),
+//   proxy(process.env.LIFF_SERVICE)
+// );
+
+app.listen(3003, () => {
+  console.log(`Example app listening on 3003`);
 });
+
+// https.createServer(options, app).listen(3003, function () {
+//   console.log("Listening on port 3003");
+// });
