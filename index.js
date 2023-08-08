@@ -20,13 +20,11 @@ app.use(
 );
 
 app.use(verifyToken);
-
-app.use(require("./router/api.worldcrater.com"));
-app.use(require("./router/messfar.com"));
-
 app.get("/", (req, res) => {
   res.send(`ᕕ( ᐛ )ᕗ`);
 });
+app.use(require("./router/api.worldcrater.com"));
+app.use(require("./router/messfar.com"));
 
 app.listen(8443, () => {
   console.log("app listening on 8443");
