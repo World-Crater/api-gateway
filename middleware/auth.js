@@ -16,7 +16,6 @@ function replaceAll(str, match, replacement) {
 function matchPathWithMethod(requireScopesObject, reqPath) {
   for (const [key, _] of Object.entries(requireScopesObject)) {
     const path = replaceAll(key.split(":")[1], "*", ".+"); //yorktodo看可不可以優化排除/
-    console.log("yorkmloooq", path, reqPath);
     if (new RegExp(`^${path}$`).test(reqPath)) {
       return key;
     }
@@ -27,7 +26,6 @@ function checkScopes(requireScopesObject) {
   return (req, res, next) => {
     const pathWithMethod = matchPathWithMethod(requireScopesObject, req.path);
     const requireScopes = requireScopesObject[[pathWithMethod]];
-    console.log("yorkvhubhhu", req.path, requireScopes, pathWithMethod);
     if (
       !!requireScopes &&
       (requireScopes.length === 0 ||
@@ -50,7 +48,6 @@ async function verifyToken(req, res, next) {
       return;
     }
     const decode = await verifyAuthToken(req.headers.authorization);
-    console.log("yorkvghuio", decode);
     res.locals = {
       ...req.local,
       ...decode,

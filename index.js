@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 
 app.use((req, res, next) => {
-  console.log("get request");
+  console.log("get request: ", req.url);
   next();
 });
 
@@ -20,11 +20,8 @@ app.use(
 );
 
 app.use(verifyToken);
-app.get("/", (req, res) => {
-  res.send(`ᕕ( ᐛ )ᕗ`);
-});
 app.use(require("./router/api.worldcrater.com"));
-app.use(require("./router/messfar.com"));
+app.use(require("./router/line.messfar.com"));
 
 app.listen(8443, () => {
   console.log("app listening on 8443");

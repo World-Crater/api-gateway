@@ -26,7 +26,6 @@ router.delete(
 );
 router.get("/liff-service/accounts/:accountID/favorites", (req, res, next) => {
   req.url = `/liff-service/accounts/${res.locals.accountID}/favorites`;
-  console.log("yorkjijais", req.url);
   next();
 });
 
@@ -36,6 +35,7 @@ router.use(
     "POST:/accounts/*/favorites": [scopes.messfarUser],
     "DELETE:/accounts/*/favorites/*": [scopes.messfarUser],
     "GET:/accounts/*/favorites": [scopes.messfarUser],
+    "GET:/health": [],
   }),
   proxy(process.env.LIFF_SERVICE)
 );
@@ -43,7 +43,6 @@ router.use(
 router.use(
   "/auth-service",
   (req, res, next) => {
-    console.log("york", req.url, process.env.AUTH_SERVICE);
     next();
   },
   proxy(process.env.AUTH_SERVICE)
